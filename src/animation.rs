@@ -41,6 +41,7 @@ impl MovementSegment {
         }
     }
 
+    /// The way length we have covered at the end of the segment.
     fn get_end_length(&self) -> f32 {
         self.way_length_from_to.1
     }
@@ -63,8 +64,7 @@ pub struct AnimatingStone {
 impl AnimatingStone {
     /// Given a move command from the tower we generate a corresponding animation for this one.
     pub fn new(command: &MoveCommand) -> Self {
-        #[allow(clippy::useless_vec)]
-        let control_points = vec![
+        let control_points = [
             TowerGraphics::get_tower_point(command.start_tower, command.start_height),
             TowerGraphics::get_turning_point(command.start_tower),
             TowerGraphics::get_turning_point(command.end_tower),
