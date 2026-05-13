@@ -50,7 +50,7 @@ impl Tower {
         start_slice < destination_slice
     }
 
-    /// Constructs a move command from the indicated stat ane end tower.
+    /// Constructs a move command from the indicated start and end tower.
     pub fn get_move_command(&self, start_tower: usize, end_tower: usize) -> MoveCommand {
         debug_assert!(start_tower <= 2);
         debug_assert!(end_tower <= 2);
