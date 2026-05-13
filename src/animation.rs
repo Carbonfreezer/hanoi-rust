@@ -99,7 +99,7 @@ impl AnimatingStone {
         self.covered_way_length >= self.total_way_length
     }
 
-    /// Draws the stone.
+    /// Draws the stone at the current animation position.
     pub fn render_stone(&self) {
         let position = self
             .path_segments

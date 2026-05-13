@@ -1,4 +1,4 @@
-//! This module encapsulates anything that is related to the number of slices the tower has
+//! This module encapsulates anything that is related to the number of slices the tower has.
 
 use colorous::VIRIDIS;
 use macroquad::color::Color;
@@ -10,10 +10,12 @@ pub const NUM_OF_SLICES: u8 = 8;
 const SLICE_WIDTH_MIN_MAX: (f32, f32) = (10.0, 20.0);
 
 
+/// The slice height for painting.
 pub fn slice_height() -> f32 {
     60.0 / NUM_OF_SLICES as f32
 }
 
+/// The width of the slices for a specific index.
 pub fn get_width_for_slice( slice: u8) -> f32 {
     SLICE_WIDTH_MIN_MAX.0
         + ((slice as f32) / (NUM_OF_SLICES as f32))
