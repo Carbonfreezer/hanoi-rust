@@ -2,6 +2,7 @@
 
 use crate::tower::{NUM_SLICES, Tower};
 use macroquad::prelude::*;
+use colorous::VIRIDIS;
 
 /// The virtual window dimension we use. The origin is in the upper left corner.
 const WINDOW_DIMENSIONS: f32 = 100.0;
@@ -21,14 +22,23 @@ const TOWER_POSITIONS: [f32; 3] = [15.0, 50.0, 85.0];
 /// The topping height, where the pieces change from / to vertical direction.
 const FLYING_HEIGHT: f32 = SLICE_HEIGHT;
 
-/// The different color we use.
-const SLICE_COLOR: [Color; NUM_SLICES as usize] = [RED, GREEN, BLUE, YELLOW, ORANGE];
-
 const SLICE_WIDTH_MIN_MAX: (f32, f32) = (10.0, 20.0);
 
 fn get_width_for_slice(slice: u8) -> f32 {
     SLICE_WIDTH_MIN_MAX.0
         + ((slice as f32) / (NUM_SLICES as f32)) * (SLICE_WIDTH_MIN_MAX.1 - SLICE_WIDTH_MIN_MAX.0)
+}
+
+
+/// Gets the color of the slice by a viridis color scale.
+fn get_slice_color(slice : u8 ) -> Color {
+    let base = VIRIDIS.eval_continuous(1.0 - slice as f64 / NUM_SLICES as f64);
+    Color::new(
+        base.r as f32 / 255.0,
+        base.g as f32 / 255.0,
+        base.b as f32 / 255.0,
+        1.0,
+    )
 }
 
 #[derive(Default)]
@@ -60,7 +70,7 @@ impl TowerGraphics {
             top_left.y,
             width,
             SLICE_HEIGHT,
-            SLICE_COLOR[slice_index as usize],
+            get_slice_color(slice_index),
         );
     }
 
