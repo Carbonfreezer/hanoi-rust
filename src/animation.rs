@@ -13,7 +13,7 @@ struct MovementSegment {
     starting_point: Vec2,
     /// Where does it end.
     ending_point: Vec2,
-    /// The way length part we are responsible of.
+    /// The way length part we are responsible for.
     way_length_from_to: (f32, f32),
 }
 
