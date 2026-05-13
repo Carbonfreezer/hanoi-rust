@@ -1,15 +1,15 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use crate::animation::AnimatingStone;
+use crate::dimensions::NUM_OF_SLICES;
 use crate::tower::{MoveCommand, Tower};
 use crate::tower_graphics::TowerGraphics;
 use macroquad::prelude::{BLACK, clear_background, get_frame_time, next_frame};
-use crate::dimensions::NUM_OF_SLICES;
 
 mod animation;
+mod dimensions;
 mod tower;
 mod tower_graphics;
-mod dimensions;
 
 /// The resulting type of the tower iterator to paint animations and the non moving game state.
 struct TowerStateMove {
@@ -90,7 +90,6 @@ impl Iterator for TowerIterator {
 
 /// The amount of  elements is known upfront, wo we can make an exact size iterator out of it.
 impl ExactSizeIterator for TowerIterator {}
-
 
 #[macroquad::main("Towers of Hanoi")]
 async fn main() {

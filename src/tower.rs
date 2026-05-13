@@ -34,7 +34,7 @@ impl Tower {
             Vec::with_capacity(NUM_OF_SLICES as usize),
         ];
 
-        for i in 0..NUM_OF_SLICES  {
+        for i in 0..NUM_OF_SLICES {
             towers[start_pilon].push(NUM_OF_SLICES - i - 1);
         }
         Self { towers }

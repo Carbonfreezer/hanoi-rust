@@ -1,12 +1,11 @@
 //! This module is in charge of rendering the tower and the dealing with coordinates of single slices.
 
-use crate::tower::{Tower};
+use crate::dimensions::{SLICE_HEIGHT, get_slice_color, get_width_for_slice};
+use crate::tower::Tower;
 use macroquad::prelude::*;
-use crate::dimensions::{get_slice_color, get_width_for_slice, slice_height};
 
 /// The virtual window dimension we use. The origin is in the upper left corner.
 const WINDOW_DIMENSIONS: f32 = 100.0;
-
 
 /// The height of the tower.
 const TOWER_HEIGHT: f32 = 70.0;
@@ -16,9 +15,6 @@ const TOWER_WIDTH: f32 = 4.0;
 
 /// The tower positions in x dimension.
 const TOWER_POSITIONS: [f32; 3] = [15.0, 50.0, 85.0];
-
-
-
 
 #[derive(Default)]
 pub struct TowerGraphics {
@@ -31,24 +27,24 @@ impl TowerGraphics {
     pub fn get_tower_point(tower: usize, slice_index: usize) -> Vec2 {
         Vec2::new(
             TOWER_POSITIONS[tower],
-            WINDOW_DIMENSIONS - slice_index as f32 * slice_height() - slice_height() / 2.0,
+            WINDOW_DIMENSIONS - slice_index as f32 * SLICE_HEIGHT - SLICE_HEIGHT / 2.0,
         )
     }
 
     /// Gets the turning point for the tower where we change from horizontal to vertical movement.
     pub fn get_turning_point(tower: usize) -> Vec2 {
-        Vec2::new(TOWER_POSITIONS[tower], slice_height())
+        Vec2::new(TOWER_POSITIONS[tower], SLICE_HEIGHT)
     }
 
     /// Draws a slice at the indicated windows position.
     pub fn draw_slice(slice_index: u8, position: Vec2) {
         let width = get_width_for_slice(slice_index);
-        let top_left = position - Vec2::new(width * 0.5, slice_height() * 0.5);
+        let top_left = position - Vec2::new(width * 0.5, SLICE_HEIGHT * 0.5);
         draw_rectangle(
             top_left.x,
             top_left.y,
             width,
-            slice_height(),
+            SLICE_HEIGHT,
             get_slice_color(slice_index),
         );
     }
@@ -82,14 +78,11 @@ impl TowerGraphics {
                 GRAY,
             );
         }
-        
+
         let tower_collection = tower.get_towers();
         for (tower_idx, tower) in tower_collection.iter().enumerate() {
             for (slice_idx, &slice) in tower.iter().enumerate() {
-                Self::draw_slice(
-                    slice,                                       
-                    Self::get_tower_point(tower_idx, slice_idx),
-                );
+                Self::draw_slice(slice, Self::get_tower_point(tower_idx, slice_idx));
             }
         }
     }

@@ -9,14 +9,11 @@ pub const NUM_OF_SLICES: u8 = 8;
 /// The minimum and maximum width we use for the tower slices.
 const SLICE_WIDTH_MIN_MAX: (f32, f32) = (10.0, 20.0);
 
-
 /// The slice height for painting.
-pub fn slice_height() -> f32 {
-    60.0 / NUM_OF_SLICES as f32
-}
+pub const SLICE_HEIGHT: f32 = 60.0 / NUM_OF_SLICES as f32;
 
 /// The width of the slices for a specific index.
-pub fn get_width_for_slice( slice: u8) -> f32 {
+pub fn get_width_for_slice(slice: u8) -> f32 {
     SLICE_WIDTH_MIN_MAX.0
         + ((slice as f32) / (NUM_OF_SLICES as f32))
             * (SLICE_WIDTH_MIN_MAX.1 - SLICE_WIDTH_MIN_MAX.0)
