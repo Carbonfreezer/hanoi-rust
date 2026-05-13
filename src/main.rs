@@ -93,6 +93,7 @@ impl ExactSizeIterator for TowerIterator {}
 
 #[macroquad::main("Towers of Hanoi")]
 async fn main() {
+    //! The main plays a forward and backward animation for the tower of Hanoi Problem.
     let mut graphics = TowerGraphics::default();
     let mut forward = true;
 
