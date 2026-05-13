@@ -7,7 +7,7 @@ use macroquad::prelude::*;
 const WINDOW_DIMENSIONS: f32 = 100.0;
 
 /// The height of a single slice.
-const SLICE_HEIGHT: f32 = 12.0;
+const SLICE_HEIGHT: f32 = 60.0 / NUM_SLICES as f32;
 
 /// The height of the tower.
 const TOWER_HEIGHT: f32 = SLICE_HEIGHT * (NUM_SLICES + 1) as f32;
@@ -24,8 +24,12 @@ const FLYING_HEIGHT: f32 = SLICE_HEIGHT;
 /// The different color we use.
 const SLICE_COLOR: [Color; NUM_SLICES as usize] = [RED, GREEN, BLUE, YELLOW, ORANGE];
 
-/// The width for the diverse slices.
-const SLICE_WIDTH: [f32; NUM_SLICES as usize] = [10.0, 12.5, 15.0, 17.5, 20.0];
+const SLICE_WIDTH_MIN_MAX: (f32, f32) = (10.0, 20.0);
+
+fn get_width_for_slice(slice: u8) -> f32 {
+    SLICE_WIDTH_MIN_MAX.0
+        + ((slice as f32) / (NUM_SLICES as f32)) * (SLICE_WIDTH_MIN_MAX.1 - SLICE_WIDTH_MIN_MAX.0)
+}
 
 #[derive(Default)]
 pub struct TowerGraphics {
@@ -49,7 +53,7 @@ impl TowerGraphics {
 
     /// Draws a slice at the indicated windows position.
     pub fn draw_slice(slice_index: u8, position: Vec2) {
-        let width = SLICE_WIDTH[slice_index as usize];
+        let width = get_width_for_slice(slice_index);
         let top_left = position - Vec2::new(width * 0.5, SLICE_HEIGHT * 0.5);
         draw_rectangle(
             top_left.x,
@@ -93,7 +97,7 @@ impl TowerGraphics {
         // Draw towers. This can be done faster with iterator expressions, see later.
         let tower_collection = tower.get_towers();
         for (tower_idx, tower) in tower_collection.iter().enumerate() {
-            for (slice_idx,_) in tower.iter().enumerate() {
+            for (slice_idx, _) in tower.iter().enumerate() {
                 Self::draw_slice(
                     tower[slice_idx],
                     Self::get_tower_point(tower_idx, slice_idx),

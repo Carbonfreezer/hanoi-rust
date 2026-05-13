@@ -1,11 +1,11 @@
-use macroquad::prelude::{clear_background, get_frame_time, next_frame, BLACK};
 use crate::animation::AnimatingStone;
-use crate::tower::{MoveCommand, Tower, NUM_SLICES};
+use crate::tower::{MoveCommand, NUM_SLICES, Tower};
 use crate::tower_graphics::TowerGraphics;
+use macroquad::prelude::{BLACK, clear_background, get_frame_time, next_frame};
 
-mod tower_graphics;
-mod tower;
 mod animation;
+mod tower;
+mod tower_graphics;
 
 struct TowerStateMove {
     /// The tower inbetween moves.
@@ -27,9 +27,9 @@ struct TowerIterator {
 }
 
 impl TowerIterator {
-    fn new(is_forward: bool) -> Self{
-        let (start, end) = if is_forward {(0,2)} else {(2,0)};
-        
+    fn new(is_forward: bool) -> Self {
+        let (start, end) = if is_forward { (0, 2) } else { (2, 0) };
+
         Self {
             tower: Tower::new(is_forward),
             move_index: 1,
@@ -40,10 +40,8 @@ impl TowerIterator {
                 [start, 1, end]
             },
         }
-        
     }
 }
-
 
 impl Iterator for TowerIterator {
     type Item = TowerStateMove;
@@ -88,13 +86,11 @@ impl Iterator for TowerIterator {
 /// The amount of  elements is known upfront, wo we can make an exact size iterator out of it.
 impl ExactSizeIterator for TowerIterator {}
 
-
-
 #[macroquad::main("Towers of Hanoi")]
 async fn main() {
     let mut graphics = TowerGraphics::default();
     let mut forward = true;
-    
+
     loop {
         let tower_iterator = TowerIterator::new(forward);
         forward = !forward;

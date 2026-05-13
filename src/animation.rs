@@ -1,6 +1,6 @@
 //! This module encapsulates everything related to animation.
 
-use crate::tower::{MoveCommand};
+use crate::tower::MoveCommand;
 use crate::tower_graphics::TowerGraphics;
 use macroquad::math::Vec2;
 
@@ -110,4 +110,3 @@ impl AnimatingStone {
         TowerGraphics::draw_slice(self.moving_slice, position);
     }
 }
-

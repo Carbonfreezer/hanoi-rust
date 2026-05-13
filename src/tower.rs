@@ -26,8 +26,8 @@ pub struct Tower {
 
 impl Tower {
     /// We crate a new tower with the slides being on the first or last pilon.
-    pub fn new(is_forward:bool) -> Self {
-        let start_pilon = if is_forward {0} else {2};
+    pub fn new(is_forward: bool) -> Self {
+        let start_pilon = if is_forward { 0 } else { 2 };
 
         let mut towers = [
             Vec::with_capacity(NUM_SLICES as usize),
@@ -39,7 +39,6 @@ impl Tower {
             towers[start_pilon].push(NUM_SLICES - i - 1);
         }
         Self { towers }
-
     }
     /// Checks if we can legally move from start to destination.
     pub fn is_legal_move(&self, start: usize, destination: usize) -> bool {
@@ -74,7 +73,6 @@ impl Tower {
         &self.towers
     }
 
-
     /// Executes the taking part of the move.
     pub fn take_slice(&mut self, command: &MoveCommand) {
         let test = self.towers[command.start_tower]
@@ -83,10 +81,8 @@ impl Tower {
         debug_assert_eq!(test, command.slice_index, "Inconsistent slice");
     }
 
-
     /// Executes the drop part of a move.
     pub fn drop_slice(&mut self, command: &MoveCommand) {
         self.towers[command.end_tower].push(command.slice_index);
     }
 }
-
