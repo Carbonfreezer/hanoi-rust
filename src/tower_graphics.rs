@@ -1,0 +1,104 @@
+//! This module is in charge of rendering the tower and the dealing with coordinates of single slices.
+
+use crate::tower::{ManipulationMode, NUM_SLICES, Tower};
+use macroquad::prelude::*;
+
+/// The virtual window dimension we use. The origin is in the upper left corner.
+const WINDOW_DIMENSIONS: f32 = 100.0;
+
+/// The height of a single slice.
+const SLICE_HEIGHT: f32 = 12.0;
+
+/// The height of the tower.
+const TOWER_HEIGHT: f32 = SLICE_HEIGHT * (NUM_SLICES + 1) as f32;
+
+/// The width of the tower.
+const TOWER_WIDTH: f32 = 4.0;
+
+/// The tower positions in x dimension.
+const TOWER_POSITIONS: [f32; 3] = [15.0, 50.0, 85.0];
+
+/// The topping height, where the pieces change from / to vertical direction.
+const FLYING_HEIGHT: f32 = SLICE_HEIGHT;
+
+/// The different color we use.
+const SLICE_COLOR: [Color; NUM_SLICES as usize] = [RED, GREEN, BLUE, YELLOW, ORANGE];
+
+/// The width for the diverse slices.
+const SLICE_WIDTH: [f32; NUM_SLICES as usize] = [10.0, 12.5, 15.0, 17.5, 20.0];
+
+#[derive(Default)]
+pub struct TowerGraphics {
+    camera: Camera2D,
+}
+
+impl TowerGraphics {
+    /// Asks for the position of a certain pilon.
+    /// public to be used for animation later on.
+    pub fn get_tower_point(tower: usize, slice_index: usize) -> Vec2 {
+        Vec2::new(
+            TOWER_POSITIONS[tower],
+            WINDOW_DIMENSIONS - slice_index as f32 * SLICE_HEIGHT - SLICE_HEIGHT / 2.0,
+        )
+    }
+
+    /// Gets the turning point for the tower where we change from horizontal to vertical movement.
+    pub fn get_turning_point(tower: usize) -> Vec2 {
+        Vec2::new(TOWER_POSITIONS[tower], FLYING_HEIGHT)
+    }
+
+    /// Draws a slice at the indicated windows position.
+    pub fn draw_slice(slice_index: u8, position: Vec2) {
+        let width = SLICE_WIDTH[slice_index as usize];
+        let top_left = position - Vec2::new(width * 0.5, SLICE_HEIGHT * 0.5);
+        draw_rectangle(
+            top_left.x,
+            top_left.y,
+            width,
+            SLICE_HEIGHT,
+            SLICE_COLOR[slice_index as usize],
+        );
+    }
+
+    /// Makes sure that the coordinate system is always the same independent of window size and aspect ratio.
+    pub fn update_camera_position(&mut self) {
+        self.camera.target = vec2(WINDOW_DIMENSIONS / 2.0, WINDOW_DIMENSIONS / 2.0);
+        let screen_aspect = screen_width() / screen_height();
+
+        // Aspect Ratio
+        if screen_aspect > 1.0 {
+            self.camera.zoom.x = 2.0 / (WINDOW_DIMENSIONS * screen_aspect);
+            self.camera.zoom.y = 2.0 / WINDOW_DIMENSIONS;
+        } else {
+            self.camera.zoom.x = 2.0 / WINDOW_DIMENSIONS;
+            self.camera.zoom.y = 2.0 / (WINDOW_DIMENSIONS / screen_aspect);
+        }
+
+        set_camera(&self.camera);
+    }
+
+    /// Renders the complete scene with the pillars and the slices on them.
+    pub fn draw_tower(tower: &Tower) {
+        // First the three pillars.
+        for x_pos in TOWER_POSITIONS {
+            draw_rectangle(
+                x_pos - TOWER_WIDTH * 0.5,
+                WINDOW_DIMENSIONS - TOWER_HEIGHT,
+                TOWER_WIDTH,
+                TOWER_HEIGHT,
+                GRAY,
+            );
+        }
+
+        // Draw towers. This can be done faster with iterator expressions, see later.
+        let tower_collection = tower.get_towers();
+        for tower_idx in 0..tower_collection.len() {
+            for slice_idx in 0..tower_collection[tower_idx].len() {
+                Self::draw_slice(
+                    tower_collection[tower_idx][slice_idx],
+                    Self::get_tower_point(tower_idx, slice_idx),
+                );
+            }
+        }
+    }
+}
