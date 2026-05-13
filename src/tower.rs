@@ -1,10 +1,6 @@
 //! This module has the complete logical representation of the tower.
 
-use std::sync::LazyLock;
-use crate::dimensions::Dimensions;
-use crate::NUM_OF_SLICES;
-
-pub static DIMENSIONS : LazyLock<Dimensions> =  LazyLock::new(||Dimensions::new(NUM_OF_SLICES));
+use crate::dimensions::NUM_OF_SLICES;
 
 /// The move command we get for moving a stones.
 pub struct MoveCommand {
@@ -33,13 +29,13 @@ impl Tower {
         let start_pilon = if is_forward { 0 } else { 2 };
 
         let mut towers = [
-            Vec::with_capacity(DIMENSIONS.num_slices() as usize),
-            Vec::with_capacity(DIMENSIONS.num_slices() as usize),
-            Vec::with_capacity(DIMENSIONS.num_slices() as usize),
+            Vec::with_capacity(NUM_OF_SLICES as usize),
+            Vec::with_capacity(NUM_OF_SLICES as usize),
+            Vec::with_capacity(NUM_OF_SLICES as usize),
         ];
 
-        for i in 0..DIMENSIONS.num_slices() {
-            towers[start_pilon].push(DIMENSIONS.num_slices() - i - 1);
+        for i in 0..NUM_OF_SLICES  {
+            towers[start_pilon].push(NUM_OF_SLICES - i - 1);
         }
         Self { towers }
     }
