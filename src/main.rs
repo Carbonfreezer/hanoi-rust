@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 use crate::animation::AnimatingStone;
 use crate::tower::{MoveCommand, Tower};
 use crate::tower_graphics::TowerGraphics;
@@ -88,6 +90,7 @@ impl Iterator for TowerIterator {
 
 /// The amount of  elements is known upfront, wo we can make an exact size iterator out of it.
 impl ExactSizeIterator for TowerIterator {}
+
 
 #[macroquad::main("Towers of Hanoi")]
 async fn main() {
