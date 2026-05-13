@@ -1,17 +1,14 @@
 //! This module is in charge of rendering the tower and the dealing with coordinates of single slices.
 
-use crate::tower::{NUM_SLICES, Tower};
+use crate::tower::{Tower, DIMENSIONS};
 use macroquad::prelude::*;
-use colorous::VIRIDIS;
 
 /// The virtual window dimension we use. The origin is in the upper left corner.
 const WINDOW_DIMENSIONS: f32 = 100.0;
 
-/// The height of a single slice.
-const SLICE_HEIGHT: f32 = 60.0 / NUM_SLICES as f32;
 
 /// The height of the tower.
-const TOWER_HEIGHT: f32 = SLICE_HEIGHT * (NUM_SLICES + 1) as f32;
+const TOWER_HEIGHT: f32 = 70.0;
 
 /// The width of the tower.
 const TOWER_WIDTH: f32 = 4.0;
@@ -19,27 +16,8 @@ const TOWER_WIDTH: f32 = 4.0;
 /// The tower positions in x dimension.
 const TOWER_POSITIONS: [f32; 3] = [15.0, 50.0, 85.0];
 
-/// The topping height, where the pieces change from / to vertical direction.
-const FLYING_HEIGHT: f32 = SLICE_HEIGHT;
-
-const SLICE_WIDTH_MIN_MAX: (f32, f32) = (10.0, 20.0);
-
-fn get_width_for_slice(slice: u8) -> f32 {
-    SLICE_WIDTH_MIN_MAX.0
-        + ((slice as f32) / (NUM_SLICES as f32)) * (SLICE_WIDTH_MIN_MAX.1 - SLICE_WIDTH_MIN_MAX.0)
-}
 
 
-/// Gets the color of the slice by a viridis color scale.
-fn get_slice_color(slice : u8 ) -> Color {
-    let base = VIRIDIS.eval_continuous(1.0 - slice as f64 / NUM_SLICES as f64);
-    Color::new(
-        base.r as f32 / 255.0,
-        base.g as f32 / 255.0,
-        base.b as f32 / 255.0,
-        1.0,
-    )
-}
 
 #[derive(Default)]
 pub struct TowerGraphics {
@@ -52,25 +30,25 @@ impl TowerGraphics {
     pub fn get_tower_point(tower: usize, slice_index: usize) -> Vec2 {
         Vec2::new(
             TOWER_POSITIONS[tower],
-            WINDOW_DIMENSIONS - slice_index as f32 * SLICE_HEIGHT - SLICE_HEIGHT / 2.0,
+            WINDOW_DIMENSIONS - slice_index as f32 * DIMENSIONS.slice_height() - DIMENSIONS.slice_height() / 2.0,
         )
     }
 
     /// Gets the turning point for the tower where we change from horizontal to vertical movement.
     pub fn get_turning_point(tower: usize) -> Vec2 {
-        Vec2::new(TOWER_POSITIONS[tower], FLYING_HEIGHT)
+        Vec2::new(TOWER_POSITIONS[tower], DIMENSIONS.slice_height())
     }
 
     /// Draws a slice at the indicated windows position.
     pub fn draw_slice(slice_index: u8, position: Vec2) {
-        let width = get_width_for_slice(slice_index);
-        let top_left = position - Vec2::new(width * 0.5, SLICE_HEIGHT * 0.5);
+        let width = DIMENSIONS.get_width_for_slice(slice_index);
+        let top_left = position - Vec2::new(width * 0.5, DIMENSIONS.slice_height() * 0.5);
         draw_rectangle(
             top_left.x,
             top_left.y,
             width,
-            SLICE_HEIGHT,
-            get_slice_color(slice_index),
+            DIMENSIONS.slice_height(),
+            DIMENSIONS.get_slice_color(slice_index),
         );
     }
 

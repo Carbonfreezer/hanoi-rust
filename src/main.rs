@@ -1,11 +1,12 @@
 use crate::animation::AnimatingStone;
-use crate::tower::{MoveCommand, NUM_SLICES, Tower};
+use crate::tower::{MoveCommand, Tower, DIMENSIONS};
 use crate::tower_graphics::TowerGraphics;
 use macroquad::prelude::{BLACK, clear_background, get_frame_time, next_frame};
 
 mod animation;
 mod tower;
 mod tower_graphics;
+mod dimensions;
 
 struct TowerStateMove {
     /// The tower inbetween moves.
@@ -33,8 +34,8 @@ impl TowerIterator {
         Self {
             tower: Tower::new(is_forward),
             move_index: 1,
-            amount_of_moves: 2_usize.pow(NUM_SLICES as u32) - 1,
-            pole_characteristic: if NUM_SLICES.is_multiple_of(2) {
+            amount_of_moves: 2_usize.pow(DIMENSIONS.num_slices() as u32) - 1,
+            pole_characteristic: if DIMENSIONS.num_slices().is_multiple_of(2) {
                 [start, end, 1]
             } else {
                 [start, 1, end]
