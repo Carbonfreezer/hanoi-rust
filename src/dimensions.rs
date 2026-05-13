@@ -3,6 +3,8 @@
 use colorous::VIRIDIS;
 use macroquad::color::Color;
 
+
+
 pub struct Dimensions {
     num_slices: u8,
 }

@@ -2,8 +2,9 @@
 
 use std::sync::LazyLock;
 use crate::dimensions::Dimensions;
+use crate::NUM_OF_SLICES;
 
-pub static DIMENSIONS : LazyLock<Dimensions> =  LazyLock::new(||Dimensions::new(5));
+pub static DIMENSIONS : LazyLock<Dimensions> =  LazyLock::new(||Dimensions::new(NUM_OF_SLICES));
 
 /// The move command we get for moving a stones.
 pub struct MoveCommand {

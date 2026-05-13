@@ -8,6 +8,9 @@ mod tower;
 mod tower_graphics;
 mod dimensions;
 
+/// The number of slices we use for the tower simulator.
+pub const NUM_OF_SLICES: u8 = 8;
+
 struct TowerStateMove {
     /// The tower inbetween moves.
     tower: Tower,
