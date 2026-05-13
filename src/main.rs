@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use crate::animation::AnimatingStone;
 use crate::tower::{MoveCommand, Tower};
