@@ -9,7 +9,7 @@ mod tower;
 mod tower_graphics;
 mod dimensions;
 
-
+/// The resulting type of the tower iterator to paint animations and the non moving game state.
 struct TowerStateMove {
     /// The tower inbetween moves.
     tower: Tower,

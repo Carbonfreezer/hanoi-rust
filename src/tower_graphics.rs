@@ -82,13 +82,12 @@ impl TowerGraphics {
                 GRAY,
             );
         }
-
-        // Draw towers. This can be done faster with iterator expressions, see later.
+        
         let tower_collection = tower.get_towers();
         for (tower_idx, tower) in tower_collection.iter().enumerate() {
-            for (slice_idx, _) in tower.iter().enumerate() {
+            for (slice_idx, &slice) in tower.iter().enumerate() {
                 Self::draw_slice(
-                    tower[slice_idx],
+                    slice,                                       
                     Self::get_tower_point(tower_idx, slice_idx),
                 );
             }
