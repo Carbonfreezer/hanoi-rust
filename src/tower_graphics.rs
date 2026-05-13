@@ -1,6 +1,6 @@
 //! This module is in charge of rendering the tower and the dealing with coordinates of single slices.
 
-use crate::tower::{ManipulationMode, NUM_SLICES, Tower};
+use crate::tower::{NUM_SLICES, Tower};
 use macroquad::prelude::*;
 
 /// The virtual window dimension we use. The origin is in the upper left corner.
@@ -92,10 +92,10 @@ impl TowerGraphics {
 
         // Draw towers. This can be done faster with iterator expressions, see later.
         let tower_collection = tower.get_towers();
-        for tower_idx in 0..tower_collection.len() {
-            for slice_idx in 0..tower_collection[tower_idx].len() {
+        for (tower_idx, tower) in tower_collection.iter().enumerate() {
+            for (slice_idx,_) in tower.iter().enumerate() {
                 Self::draw_slice(
-                    tower_collection[tower_idx][slice_idx],
+                    tower[slice_idx],
                     Self::get_tower_point(tower_idx, slice_idx),
                 );
             }

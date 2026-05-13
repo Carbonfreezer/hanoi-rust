@@ -1,6 +1,6 @@
 use macroquad::prelude::{clear_background, get_frame_time, next_frame, BLACK};
 use crate::animation::AnimatingStone;
-use crate::tower::{ManipulationMode, MoveCommand, Tower, NUM_SLICES};
+use crate::tower::{MoveCommand, Tower, NUM_SLICES};
 use crate::tower_graphics::TowerGraphics;
 
 mod tower_graphics;
@@ -26,21 +26,24 @@ struct TowerIterator {
     pole_characteristic: [usize; 3],
 }
 
-impl Default for TowerIterator {
-    /// Creates a default from the standard configuration.
-    fn default() -> Self {
+impl TowerIterator {
+    fn new(is_forward: bool) -> Self{
+        let (start, end) = if is_forward {(0,2)} else {(2,0)};
+        
         Self {
-            tower: Tower::default(),
+            tower: Tower::new(is_forward),
             move_index: 1,
             amount_of_moves: 2_usize.pow(NUM_SLICES as u32) - 1,
             pole_characteristic: if NUM_SLICES.is_multiple_of(2) {
-                [0, 2, 1]
+                [start, end, 1]
             } else {
-                [0, 1, 2]
+                [start, 1, end]
             },
         }
+        
     }
 }
+
 
 impl Iterator for TowerIterator {
     type Item = TowerStateMove;
@@ -66,9 +69,9 @@ impl Iterator for TowerIterator {
         }
 
         let command = self.tower.get_move_command(start, end);
-        self.tower.apply_move(&command, ManipulationMode::TakeOnly);
+        self.tower.take_slice(&command);
         let between_tower = self.tower.clone();
-        self.tower.apply_move(&command, ManipulationMode::DropOnly);
+        self.tower.drop_slice(&command);
         self.move_index += 1;
         Some(TowerStateMove {
             tower: between_tower,
@@ -87,20 +90,23 @@ impl ExactSizeIterator for TowerIterator {}
 
 
 
-#[macroquad::main("Türme von Hanoi")]
+#[macroquad::main("Towers of Hanoi")]
 async fn main() {
-    let tower_iterator = TowerIterator::default();
     let mut graphics = TowerGraphics::default();
-
-    let mut animation;
-    for action in tower_iterator {
-        animation = AnimatingStone::new(&action.command);
-        while !animation.update(get_frame_time()) {
-            graphics.update_camera_position();
-            clear_background(BLACK);
-            TowerGraphics::draw_tower(&action.tower);
-            animation.render_stone();
-            next_frame().await
+    let mut forward = true;
+    
+    loop {
+        let tower_iterator = TowerIterator::new(forward);
+        forward = !forward;
+        for action in tower_iterator {
+            let mut animation = AnimatingStone::new(&action.command);
+            while !animation.update(get_frame_time()) {
+                graphics.update_camera_position();
+                clear_background(BLACK);
+                TowerGraphics::draw_tower(&action.tower);
+                animation.render_stone();
+                next_frame().await
+            }
         }
     }
 }

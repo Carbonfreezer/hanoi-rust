@@ -1,33 +1,20 @@
 //! This module has the complete logical representation of the tower.
 
-use std::mem::take;
-
 /// The number of slices we put onto the tower.
 pub const NUM_SLICES: u8 = 5;
 
 /// The move command we get for moving a stones.
 pub struct MoveCommand {
     /// The start tower we take a slice from-
-    pub(crate) start_tower: usize,
+    pub start_tower: usize,
     /// The end tower we move to.
-    pub(crate) end_tower: usize,
+    pub end_tower: usize,
     /// The starting height where we should start.
-    pub(crate) start_height: usize,
+    pub start_height: usize,
     /// The ending height we should go to.
-    pub(crate) end_height: usize,
+    pub end_height: usize,
     /// The slice we move.
-    pub(crate) slice_index: u8,
-}
-
-/// The mode to manipulate the current state with the commands.
-#[derive(Copy, Clone, Debug)]
-pub enum ManipulationMode {
-    /// We take and we drop the stones.
-    FullTransfer,
-    /// We take only the stones.
-    TakeOnly,
-    /// We drop only the stones.
-    DropOnly,
+    pub slice_index: u8,
 }
 
 /// The tower with the three pilons.
@@ -37,8 +24,11 @@ pub struct Tower {
     towers: [Vec<u8>; 3],
 }
 
-impl Default for Tower {
-    fn default() -> Self {
+impl Tower {
+    /// We crate a new tower with the slides being on the first or last pilon.
+    pub fn new(is_forward:bool) -> Self {
+        let start_pilon = if is_forward {0} else {2};
+
         let mut towers = [
             Vec::with_capacity(NUM_SLICES as usize),
             Vec::with_capacity(NUM_SLICES as usize),
@@ -46,13 +36,11 @@ impl Default for Tower {
         ];
 
         for i in 0..NUM_SLICES {
-            towers[0].push(NUM_SLICES - i - 1);
+            towers[start_pilon].push(NUM_SLICES - i - 1);
         }
         Self { towers }
-    }
-}
 
-impl Tower {
+    }
     /// Checks if we can legally move from start to destination.
     pub fn is_legal_move(&self, start: usize, destination: usize) -> bool {
         let Some(start_slice) = self.towers[start].last() else {
@@ -86,19 +74,19 @@ impl Tower {
         &self.towers
     }
 
-    /// Applies a move in different modes. TakeOnly and DropOnly are used in combination with animation.
-    pub fn apply_move(&mut self, command: &MoveCommand, mode: ManipulationMode) {
-        use ManipulationMode::*;
-        if matches!(mode, TakeOnly | FullTransfer) {
-            let test = self.towers[command.start_tower]
-                .pop()
-                .expect("One element should be at start tower");
-            debug_assert_eq!(test, command.slice_index, "Inconsistent slice");
-        }
 
-        if matches!(mode, DropOnly | FullTransfer) {
-            self.towers[command.end_tower].push(command.slice_index);
-        }
+    /// Executes the taking part of the move.
+    pub fn take_slice(&mut self, command: &MoveCommand) {
+        let test = self.towers[command.start_tower]
+            .pop()
+            .expect("One element should be at start tower");
+        debug_assert_eq!(test, command.slice_index, "Inconsistent slice");
+    }
+
+
+    /// Executes the drop part of a move.
+    pub fn drop_slice(&mut self, command: &MoveCommand) {
+        self.towers[command.end_tower].push(command.slice_index);
     }
 }
 
