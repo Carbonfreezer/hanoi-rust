@@ -78,8 +78,7 @@ impl Tower {
         }
     }
 
-    /// Gets  the towers as an enumeration, this contains all slices with the
-    /// indication in which tower they are and at which height.
+    /// Returns an iterator over all slices with their tower and height position.
     pub fn get_tower_description(&self) -> impl Iterator<Item = SliceDescription> {
         self.towers
             .iter()
