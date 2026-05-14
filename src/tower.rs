@@ -16,6 +16,17 @@ pub struct MoveCommand {
     pub slice_index: u8,
 }
 
+/// The description of s single slice in the tower used for rendering.
+#[derive(Debug, Clone)]
+pub struct SliceDescription {
+    /// To which tower do we belong (0,1,2)
+    pub tower_idx: usize,
+    /// At which height are we positioned?
+    pub slice_idx: usize,
+    /// Which slice is it?
+    pub slice: u8,
+}
+
 /// The tower with the three pilons.
 #[derive(Clone, Debug)]
 pub struct Tower {
@@ -67,10 +78,22 @@ impl Tower {
         }
     }
 
-    /// Gets  the towers as an enumeration.
-    pub fn get_tower_enumerator(&self) -> impl Iterator<Item=(usize, &Vec<u8>)>
-    {
-        self.towers.iter().enumerate()
+    /// Gets  the towers as an enumeration, this contains all slices with the
+    /// indication in which tower they are and at which height.
+    pub fn get_tower_description(&self) -> impl Iterator<Item = SliceDescription> {
+        self.towers
+            .iter()
+            .enumerate()
+            .flat_map(|(tower_idx, tower)| {
+                tower
+                    .iter()
+                    .enumerate()
+                    .map(move |(slice_idx, &slice)| SliceDescription {
+                        slice,
+                        slice_idx,
+                        tower_idx,
+                    })
+            })
     }
 
     /// Executes the taking part of the move.

@@ -80,10 +80,11 @@ impl TowerGraphics {
             );
         }
 
-        for (tower_idx, tower) in tower.get_tower_enumerator() {
-            for (slice_idx, &slice) in tower.iter().enumerate() {
-                Self::draw_slice(slice, Self::get_tower_point(tower_idx, slice_idx));
-            }
+        for element in tower.get_tower_description() {
+            Self::draw_slice(
+                element.slice,
+                Self::get_tower_point(element.tower_idx, element.slice_idx),
+            );
         }
     }
 }
