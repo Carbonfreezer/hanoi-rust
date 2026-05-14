@@ -67,9 +67,10 @@ impl Tower {
         }
     }
 
-    /// Gets  the towers.
-    pub fn get_towers(&self) -> &[Vec<u8>; 3] {
-        &self.towers
+    /// Gets  the towers as an enumeration.
+    pub fn get_tower_enumerator(&self) -> impl Iterator<Item=(usize, &Vec<u8>)>
+    {
+        self.towers.iter().enumerate()
     }
 
     /// Executes the taking part of the move.

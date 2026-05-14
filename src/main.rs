@@ -82,6 +82,7 @@ impl Iterator for TowerIterator {
         })
     }
 
+    /// The exact size of the iterator can be computed. 
     fn size_hint(&self) -> (usize, Option<usize>) {
         let remaining = self.amount_of_moves - (self.move_index - 1);
         (remaining, Some(remaining))

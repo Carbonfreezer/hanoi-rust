@@ -10,20 +10,21 @@ const WINDOW_DIMENSIONS: f32 = 100.0;
 /// The height of the tower.
 const TOWER_HEIGHT: f32 = 70.0;
 
-/// The width of the tower.
+/// The width of the tower pilon.
 const TOWER_WIDTH: f32 = 4.0;
 
 /// The tower positions in x dimension.
 const TOWER_POSITIONS: [f32; 3] = [15.0, 50.0, 85.0];
 
 #[derive(Default)]
+/// The graphics module itself only contains a camera that gets calibrated for windows extension.
 pub struct TowerGraphics {
     camera: Camera2D,
 }
 
 impl TowerGraphics {
     /// Asks for the position of a certain pilon.
-    /// public to be used for animation later on.
+    /// To be used for animation.
     pub fn get_tower_point(tower: usize, slice_index: usize) -> Vec2 {
         Vec2::new(
             TOWER_POSITIONS[tower],
@@ -79,8 +80,7 @@ impl TowerGraphics {
             );
         }
 
-        let tower_collection = tower.get_towers();
-        for (tower_idx, tower) in tower_collection.iter().enumerate() {
+        for (tower_idx, tower) in tower.get_tower_enumerator() {
             for (slice_idx, &slice) in tower.iter().enumerate() {
                 Self::draw_slice(slice, Self::get_tower_point(tower_idx, slice_idx));
             }
