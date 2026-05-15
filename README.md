@@ -27,7 +27,7 @@ The solver runs continuously, alternating between moving the discs forward (left
 ### Build & Run
 
 ```bash
-git clone https://github.com/Carbonfreezer/towers-of-hanoi.git
+git clone https://github.com/Carbonfreezer/hanoi-rust.git
 cd towers-of-hanoi
 cargo run --release
 ```
